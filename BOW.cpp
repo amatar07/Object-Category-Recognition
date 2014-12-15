@@ -48,11 +48,16 @@ Mat BOW::append_images(Mat image1, Mat image2)
  */
 Mat BOW::append_images(vector<Mat> images)
 {
-	Mat appended = images[0];
+	Mat appended = Mat::zeros(1, 1, CV_32F);
 
-	for (size_t i = 1; i < images.size(); i++)
+	if (images.size() > 0)
 	{
-		appended = append_images(appended, images[i]);
+		appended = images[0];
+
+		for (size_t i = 1; i < images.size(); i++)
+		{
+			appended = append_images(appended, images[i]);
+		}
 	}
 
 	return appended;

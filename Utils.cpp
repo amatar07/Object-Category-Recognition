@@ -7,6 +7,24 @@
 
 #include "Utils.h"
 
+vector<Mat> Utils::getRandomImages(vector<Mat> images, int nums)
+{
+	set<int> indexes;
+	vector<Mat> choices;
+	int max_index = images.size();
+	while (indexes.size() < min(nums, max_index))
+	{
+		int random_index = rand() % max_index;
+		if (indexes.find(random_index) == indexes.end())
+		{
+			choices.push_back(images[random_index]);
+			indexes.insert(random_index);
+		}
+	}
+
+	return choices;
+}
+
 /**
  * reading an image
  * from given path
@@ -22,8 +40,6 @@ Mat Utils::readSingleImage(string path)
 	return result;
 }
 
-
-
 /**
  * reading a directory
  *
@@ -34,10 +50,11 @@ Mat Utils::readSingleImage(string path)
  */
 vector<Mat> Utils::readFolderImages(string path, string imageType)
 {
+	DIR *dir;
 	vector<Mat> allImages;
 	const char * c = path.c_str();
-	DIR *dir;
 	struct dirent *ent;
+
 	if ((dir = opendir(c)) != NULL)
 	{
 		while ((ent = readdir(dir)) != NULL)
@@ -58,8 +75,6 @@ vector<Mat> Utils::readFolderImages(string path, string imageType)
 
 	return allImages;
 }
-
-
 
 /**
  * reading a directory
