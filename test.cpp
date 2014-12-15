@@ -14,10 +14,11 @@ int main()
 	source = imread("../Test-Data/images/Lenna.png");
 
 	Utils x;
-	string bo = "../Test-Data/images/Lenna.png";
-	x.readFolderImages("../Test-Data/TUDarmstadt/PNGImages/motorbike-testset/");
-
-//	imshow("Original Image", source);
+//	string bo = "../Test-Data/images/Lenna.png";
+//	x.readFolderImages("../Test-Data/TUDarmstadt/PNGImages/motorbike-testset/", "png");
+	Mat f = imread("../Test-Data/images/Lenna.png", 1);
+	x.createFile("../Test-Data/images/", "LANCHONN", "sift", f);
+	//imshow("Original Image", source);
 
 	waitKey(0);
 	return 0;

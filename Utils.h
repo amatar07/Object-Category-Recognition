@@ -20,12 +20,14 @@ using namespace cv;
 
 #ifndef UTILS_H_
 #define UTILS_H_
+#define FILEWRITETYPE 					"png"
 
 class Utils
 {
 public:
-	vector<Mat> readFolderImages(string path);
 	Mat readSingleImage(string path);
+	vector<Mat> readFolderImages(string path, string imageType);
+	void createFile(string path, string fileName, string fileType, Mat image);
 };
 
 #endif /* UTILS_H_ */
