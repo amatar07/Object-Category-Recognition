@@ -25,10 +25,11 @@ using namespace cv;
 class Utils
 {
 public:
-	vector<Mat> getRandomImages(vector<Mat> images, int nums);
 	Mat readSingleImage(string path);
 	vector<Mat> readFolderImages(string path, string imageType);
 	void createFile(string path, string fileName, string fileType, Mat image);
+
+	vector<Mat> getRandomImages(vector<Mat> images, int nums);
 };
 
 #endif

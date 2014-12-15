@@ -2,28 +2,10 @@
  * Utils.cpp
  *
  *  Created on: Dec 15, 2014
- *      Author: Ahmed
+ *      Author: Ahmed, karim
  */
 
 #include "Utils.h"
-
-vector<Mat> Utils::getRandomImages(vector<Mat> images, int nums)
-{
-	set<int> indexes;
-	vector<Mat> choices;
-	int max_index = images.size();
-	while (indexes.size() < min(nums, max_index))
-	{
-		int random_index = rand() % max_index;
-		if (indexes.find(random_index) == indexes.end())
-		{
-			choices.push_back(images[random_index]);
-			indexes.insert(random_index);
-		}
-	}
-
-	return choices;
-}
 
 /**
  * reading an image
@@ -90,4 +72,32 @@ vector<Mat> Utils::readFolderImages(string path, string imageType)
 void Utils::createFile(string path, string fileName, string fileType, Mat image)
 {
 	imwrite(path + fileName + "." + fileType + "." + FILEWRITETYPE, image);
+}
+
+/**
+ * Select n random images
+ * from a given list
+ *
+ * @param images	Vector of images
+ * @param num		Number of images to select
+ *
+ *
+ * @return vector of selected images
+ */
+vector<Mat> Utils::getRandomImages(vector<Mat> images, int nums)
+{
+	set<int> indexes;
+	vector<Mat> choices;
+	int max_index = images.size();
+	while (indexes.size() < min(nums, max_index))
+	{
+		int random_index = rand() % max_index;
+		if (indexes.find(random_index) == indexes.end())
+		{
+			choices.push_back(images[random_index]);
+			indexes.insert(random_index);
+		}
+	}
+
+	return choices;
 }

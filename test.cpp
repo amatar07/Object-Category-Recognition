@@ -24,14 +24,12 @@ int main()
 	vector<Mat> choices;
 	for (int j = 0; j < 3; j++)
 	{
-
 		choices = util.getRandomImages(images, 1);
 
 		for (size_t i = 0; i < choices.size(); i++)
 		{
 			imshow("Original Image" + j, choices[0]);
 		}
-
 	}
 
 	waitKey(0);
