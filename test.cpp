@@ -6,12 +6,18 @@
  */
 
 #include "FeaturesExtraction.h"
+#include "Utils.h"
 
 int main()
 {
 	Mat source;
 	source = imread("../Test-Data/images/Lenna.png");
-	imshow("Original Image", source);
+
+	Utils x;
+	string bo = "../Test-Data/images/Lenna.png";
+	x.readFolderImages("../Test-Data/TUDarmstadt/PNGImages/motorbike-testset/");
+
+//	imshow("Original Image", source);
 
 	waitKey(0);
 	return 0;
