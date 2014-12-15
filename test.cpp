@@ -5,20 +5,23 @@
  *  Author: Karim Tarek, Ahmed Matar, Shawky
  */
 
-#include "FeaturesExtraction.h"
+//#include "FeaturesExtraction.h"
 #include "Utils.h"
+#include "BOW.h"
 
-int main()
-{
+int main() {
 	Mat source;
 	source = imread("../Test-Data/images/Lenna.png");
 
-	Utils x;
+	//Utils x;
 //	string bo = "../Test-Data/images/Lenna.png";
 //	x.readFolderImages("../Test-Data/TUDarmstadt/PNGImages/motorbike-testset/", "png");
 	Mat f = imread("../Test-Data/images/Lenna.png", 1);
-	x.createFile("../Test-Data/images/", "LANCHONN", "sift", f);
+	//x.createFile("../Test-Data/images/", "LANCHONN", "sift", f);
 	//imshow("Original Image", source);
+	BOW x;
+	f = x.append_images(f, f);
+	imshow("Original Image", f);
 
 	waitKey(0);
 	return 0;
