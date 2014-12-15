@@ -5,23 +5,26 @@
  *  Author: Karim Tarek, Ahmed Matar, Shawky
  */
 
-//#include "FeaturesExtraction.h"
 #include "Utils.h"
 #include "BOW.h"
 
-int main() {
-	Mat source;
-	source = imread("../Test-Data/images/Lenna.png");
+int main()
+{
+	Mat source1, source2, source3, output;
+	source1 = imread("../Test-Data/images/Lenna.png");
+	source2 = imread("../Test-Data/images/test.jpg");
+	source3 = imread("../Test-Data/images/frame_18.png");
 
-	//Utils x;
-//	string bo = "../Test-Data/images/Lenna.png";
-//	x.readFolderImages("../Test-Data/TUDarmstadt/PNGImages/motorbike-testset/", "png");
-	Mat f = imread("../Test-Data/images/Lenna.png", 1);
-	//x.createFile("../Test-Data/images/", "LANCHONN", "sift", f);
-	//imshow("Original Image", source);
-	BOW x;
-	f = x.append_images(f, f);
-	imshow("Original Image", f);
+	vector<Mat> images;
+	images.push_back(source1);
+	images.push_back(source2);
+	images.push_back(source3);
+
+	BOW bow;
+	output = bow.append_images(images);
+
+	resize(output, output, Size(output.cols / 3, output.rows / 3));
+	imshow("Original Image", output);
 
 	waitKey(0);
 	return 0;

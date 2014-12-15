@@ -16,12 +16,13 @@
  *
  * @return Matrix of the image
  */
-
 Mat Utils::readSingleImage(string path)
 {
 	Mat result = imread(path, CV_LOAD_IMAGE_COLOR);
 	return result;
 }
+
+
 
 /**
  * reading a directory
@@ -31,7 +32,6 @@ Mat Utils::readSingleImage(string path)
  *
  * @return vector of matricies for the images
  */
-
 vector<Mat> Utils::readFolderImages(string path, string imageType)
 {
 	vector<Mat> allImages;
@@ -40,11 +40,9 @@ vector<Mat> Utils::readFolderImages(string path, string imageType)
 	struct dirent *ent;
 	if ((dir = opendir(c)) != NULL)
 	{
-		/* print all the files and directories within directory */
 		while ((ent = readdir(dir)) != NULL)
 		{
 			string s = ent->d_name;
-
 			if (s.find(imageType) != string::npos)
 			{
 				Mat temporary = readSingleImage(path + s);
@@ -55,11 +53,13 @@ vector<Mat> Utils::readFolderImages(string path, string imageType)
 	}
 	else
 	{
-		/* could not open directory */
 		perror("");
 	}
+
 	return allImages;
 }
+
+
 
 /**
  * reading a directory
@@ -72,7 +72,6 @@ vector<Mat> Utils::readFolderImages(string path, string imageType)
  *
  * @return vector of matricies for the images
  */
-
 void Utils::createFile(string path, string fileName, string fileType, Mat image)
 {
 	imwrite(path + fileName + "." + fileType + "." + FILEWRITETYPE, image);

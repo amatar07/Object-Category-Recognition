@@ -2,62 +2,81 @@
  *  BOW.cpp
  *
  *  Created on: Dec 15, 2014
- *  Author: Mostafa Shawky, Ahmed Matar
+ *  Author: Mostafa Shawky, Ahmed Matar, Karim Tarek
  */
 #include "BOW.h"
 
 /**
- * Encode each image
- * into bag of words
+ * Append Images
+ * vertically
  *
- * @param images		Descriptors of images
- * @param vocab			Vocabulary
+ * @param image1		First Image
+ * @param image2		Second Image
  *
  *
- * @return Bag of words
+ * @return Appended Image
  */
-
-Mat BOW::append_images(Mat image1, Mat image2) {
+Mat BOW::append_images(Mat image1, Mat image2)
+{
+	int max_cols;
 	Mat appended;
-	int max_rows;
-	if (image1.rows > image2.rows) {
-		max_rows = image1.rows;
-	} else {
-		max_rows = image2.rows;
+
+	if (image1.cols > image2.cols)
+	{
+		max_cols = image1.cols;
 	}
-	appended.create(max_rows, image1.cols + image2.cols, image1.type());
+	else
+	{
+		max_cols = image2.cols;
+	}
+
+	appended.create(image1.rows + image2.rows, max_cols, image1.type());
 	image1.copyTo(appended(Range(0, image1.rows), Range(0, image1.cols)));
-	image2.copyTo(
-			appended(Range(0, image2.rows),
-					Range(image1.cols, image1.cols + image2.cols)));
+	image2.copyTo(appended(Range(image1.rows, image1.rows + image2.rows), Range(0, image2.cols)));
+
 	return appended;
 }
 
 /**
- * Encode each image
- * into bag of words
+ * Append a vector of Images
+ * vertically
  *
- * @param images		Descriptors of images
- * @param vocab			Vocabulary
+ * @param images		Vector of images
  *
  *
- * @return Bag of words
+ * @return Appended Image
  */
+Mat BOW::append_images(vector<Mat> images)
+{
+	Mat appended = images[0];
 
-void BOW::createVocab(vector<Mat> images, int numberClusters) {
+	for (size_t i = 1; i < images.size(); i++)
+	{
+		appended = append_images(appended, images[i]);
+	}
 
-	Mat labels;
-	Mat clusterPoints(images.size() * images[0].rows, images[0].cols, CV_32F);
+	return appended;
+}
 
-	kmeans(clusterPoints, numberClusters, labels,
-			TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 10, 1.0), 3,
-			KMEANS_PP_CENTERS);
+/**
+ * Create a vocabulary
+ * using a given set image
+ *
+ * @param images		vector of images
+ * @param clustersNum	Clusters number
+ *
+ *
+ * @return The computed vocabulary
+ */
+Mat BOW::createVocab(vector<Mat> images, int clustersNum)
+{
+	Mat labels, vocab;
+	Mat decriptors = append_images(images);
 
-//	for (size_t i = 0; i < clusterPoints.size(); i++) {
-//		// clusterIdx is the id of the current feautre
-//		int clusterIdx = labels.at<int>(i);
-//	}
+	kmeans(decriptors, clustersNum, labels, TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 10, 1.0), 3,
+			KMEANS_PP_CENTERS, vocab);
 
+	return vocab;
 }
 
 /**
@@ -70,10 +89,12 @@ void BOW::createVocab(vector<Mat> images, int numberClusters) {
  *
  * @return Bag of words
  */
-Mat BOW::bagOfWords(vector<Mat> images, Mat vocab) {
+Mat BOW::bagOfWords(vector<Mat> images, Mat vocab)
+{
 	Mat bow(images.size(), vocab.rows, CV_16UC1);
 
-	for (int i = 0; i < images.size(); i++) {
+	for (int i = 0; i < images.size(); i++)
+	{
 		Mat row = getHistogram(images[i], vocab);
 		row.copyTo(bow.row(i));
 	}
@@ -91,15 +112,19 @@ Mat BOW::bagOfWords(vector<Mat> images, Mat vocab) {
  *
  * @return Histogram
  */
-Mat BOW::getHistogram(Mat descriptors, Mat vocab) {
+Mat BOW::getHistogram(Mat descriptors, Mat vocab)
+{
 	Mat histo(1, vocab.rows, CV_16UC1);
 
-	for (int i = 0; i < descriptors.rows; i++) {
+	for (int i = 0; i < descriptors.rows; i++)
+	{
 		int index = 0;
 		double min = 0;
-		for (int j = 0; j < vocab.rows; j++) {
+		for (int j = 0; j < vocab.rows; j++)
+		{
 			double temp = norm(descriptors.row(i), vocab.row(j), NORM_L2);
-			if (temp < min) {
+			if (temp < min)
+			{
 				min = temp;
 				index = j;
 			}

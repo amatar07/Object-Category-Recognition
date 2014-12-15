@@ -11,12 +11,14 @@
 using namespace std;
 using namespace cv;
 
-class BOW {
+class BOW
+{
 private:
 	Utils util;
 	Mat getHistogram(Mat descriptors, Mat vocab);
 public:
 	Mat bagOfWords(vector<Mat> images, Mat vocab);
-	void createVocab(vector<Mat> images, int numberCLusters);
+	Mat createVocab(vector<Mat> images, int numberCLusters);
 	Mat append_images(Mat image1, Mat image2);
+	Mat append_images(vector<Mat> images);
 };
