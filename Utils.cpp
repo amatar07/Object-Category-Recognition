@@ -16,9 +16,8 @@
  *
  * @return Matrix of the image
  */
-Mat Utils::readSingleImage(string path)
-{
-	Mat result = imread(path, CV_LOAD_IMAGE_COLOR);
+Mat Utils::readSingleImage(string path) {
+	Mat result = imread(path, CV_LOAD_IMAGE_GRAYSCALE);
 	return result;
 }
 
@@ -30,32 +29,48 @@ Mat Utils::readSingleImage(string path)
  *
  * @return vector of matricies for the images
  */
-vector<Mat> Utils::readFolderImages(string path, string imageType)
-{
+vector<Mat> Utils::readFolderImages(string path, string imageType) {
 	DIR *dir;
 	vector<Mat> allImages;
 	const char * c = path.c_str();
 	struct dirent *ent;
 
-	if ((dir = opendir(c)) != NULL)
-	{
-		while ((ent = readdir(dir)) != NULL)
-		{
+	if ((dir = opendir(c)) != NULL) {
+		while ((ent = readdir(dir)) != NULL) {
 			string s = ent->d_name;
-			if (s.find(imageType) != string::npos)
-			{
+			if (s.find(imageType) != string::npos) {
 				Mat temporary = readSingleImage(path + s);
 				allImages.push_back(temporary);
 			}
 		}
 		closedir(dir);
-	}
-	else
-	{
+	} else {
 		perror("");
 	}
 
 	return allImages;
+}
+
+Mat Utils::getTrainData(vector<Mat> allData) {
+	Mat result = allData[0];
+	BOW bow;
+	int trainPercent = allData.size() * 0.8;
+	for (int i = 1; i < trainPercent; i++) {
+		result = bow.append_images(result, allData[i]);
+	}
+	return result;
+
+}
+
+Mat Utils::getTestData(vector<Mat> allData) {
+
+	BOW bow;
+	int trainPercent = allData.size() * 0.8;
+	Mat result = allData[trainPercent];
+	for (int i = trainPercent + 1; i < allData.size(); i++) {
+		result = bow.append_images(result, allData[i]);
+	}
+	return result;
 }
 
 /**
@@ -69,8 +84,8 @@ vector<Mat> Utils::readFolderImages(string path, string imageType)
  *
  * @return vector of matricies for the images
  */
-void Utils::createFile(string path, string fileName, string fileType, Mat image)
-{
+void Utils::createFile(string path, string fileName, string fileType,
+		Mat image) {
 	imwrite(path + fileName + "." + fileType + "." + FILEWRITETYPE, image);
 }
 
@@ -84,16 +99,13 @@ void Utils::createFile(string path, string fileName, string fileType, Mat image)
  *
  * @return vector of selected images
  */
-vector<Mat> Utils::getRandomImages(vector<Mat> images, int nums)
-{
+vector<Mat> Utils::getRandomImages(vector<Mat> images, int nums) {
 	set<int> indexes;
 	vector<Mat> choices;
 	int max_index = images.size();
-	while (indexes.size() < min(nums, max_index))
-	{
+	while (indexes.size() < min(nums, max_index)) {
 		int random_index = rand() % max_index;
-		if (indexes.find(random_index) == indexes.end())
-		{
+		if (indexes.find(random_index) == indexes.end()) {
 			choices.push_back(images[random_index]);
 			indexes.insert(random_index);
 		}

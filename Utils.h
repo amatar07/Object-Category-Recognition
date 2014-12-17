@@ -13,23 +13,26 @@
 #include "sys/stat.h"
 #include "stdio.h"
 #include "iostream"
+
 #include "dirent.h"
 #include "opencv2/opencv.hpp"
 #include "opencv2/highgui/highgui.hpp"
+#include "BOW.h"
 
 using namespace std;
 using namespace cv;
 
 #define FILEWRITETYPE 					"png"
 
-class Utils
-{
+class Utils {
 public:
-	Mat readSingleImage(string path);
-	vector<Mat> readFolderImages(string path, string imageType);
-	void createFile(string path, string fileName, string fileType, Mat image);
 
+	Mat readSingleImage(string path);
+	vector<Mat> readFolderImages(string path, string imageType = FILEWRITETYPE);
+	void createFile(string path, string fileName, string fileType, Mat image);
 	vector<Mat> getRandomImages(vector<Mat> images, int nums);
+	Mat getTrainData(vector<Mat> allData);
+	Mat getTestData(vector<Mat> allData);
 };
 
 #endif

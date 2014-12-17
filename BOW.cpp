@@ -16,23 +16,21 @@
  *
  * @return Appended Image
  */
-Mat BOW::append_images(Mat image1, Mat image2)
-{
+Mat BOW::append_images(Mat image1, Mat image2) {
 	int max_cols;
 	Mat appended;
 
-	if (image1.cols > image2.cols)
-	{
+	if (image1.cols > image2.cols) {
 		max_cols = image1.cols;
-	}
-	else
-	{
+	} else {
 		max_cols = image2.cols;
 	}
 
-	appended.create(image1.rows + image2.rows, max_cols, image1.type());
+	appended.create(image1.rows + image2.rows, max_cols, CV_32F);
 	image1.copyTo(appended(Range(0, image1.rows), Range(0, image1.cols)));
-	image2.copyTo(appended(Range(image1.rows, image1.rows + image2.rows), Range(0, image2.cols)));
+	image2.copyTo(
+			appended(Range(image1.rows, image1.rows + image2.rows),
+					Range(0, image2.cols)));
 
 	return appended;
 }
@@ -46,16 +44,13 @@ Mat BOW::append_images(Mat image1, Mat image2)
  *
  * @return Appended Image
  */
-Mat BOW::append_images(vector<Mat> images)
-{
+Mat BOW::append_images(vector<Mat> images) {
 	Mat appended = Mat::zeros(1, 1, CV_32F);
 
-	if (images.size() > 0)
-	{
+	if (images.size() > 0) {
 		appended = images[0];
 
-		for (size_t i = 1; i < images.size(); i++)
-		{
+		for (size_t i = 1; i < images.size(); i++) {
 			appended = append_images(appended, images[i]);
 		}
 	}
@@ -73,12 +68,12 @@ Mat BOW::append_images(vector<Mat> images)
  *
  * @return The computed vocabulary
  */
-Mat BOW::createVocab(vector<Mat> images, int clustersNum)
-{
+Mat BOW::createVocab(vector<Mat> images, int clustersNum) {
 	Mat labels, vocab;
 	Mat decriptors = append_images(images);
 
-	kmeans(decriptors, clustersNum, labels, TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 10, 1.0), 3,
+	kmeans(decriptors, clustersNum, labels,
+			TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 10, 1.0), 3,
 			KMEANS_PP_CENTERS, vocab);
 
 	return vocab;
@@ -94,14 +89,11 @@ Mat BOW::createVocab(vector<Mat> images, int clustersNum)
  *
  * @return Bag of words
  */
-Mat BOW::bagOfWords(vector<Mat> images, Mat vocab)
-{
-	Mat bow(images.size(), vocab.rows, CV_16UC1);
-
-	for (int i = 0; i < images.size(); i++)
-	{
+vector<Mat> BOW::bagOfWords(vector<Mat> images, Mat vocab) {
+	vector<Mat> bow;
+	for (int i = 0; i < images.size(); i++) {
 		Mat row = getHistogram(images[i], vocab);
-		row.copyTo(bow.row(i));
+		bow.push_back(row);
 	}
 
 	return bow;
@@ -117,24 +109,23 @@ Mat BOW::bagOfWords(vector<Mat> images, Mat vocab)
  *
  * @return Histogram
  */
-Mat BOW::getHistogram(Mat descriptors, Mat vocab)
-{
-	Mat histo(1, vocab.rows, CV_16UC1);
+Mat BOW::getHistogram(Mat descriptors, Mat vocab) {
+	Mat histo(1, vocab.rows, CV_32F);
+	int x = 0;
 
-	for (int i = 0; i < descriptors.rows; i++)
-	{
+	for (int i = 0; i < descriptors.rows; i++) {
 		int index = 0;
-		double min = 0;
-		for (int j = 0; j < vocab.rows; j++)
-		{
+		double min = norm(descriptors.row(i), vocab.row(0), NORM_L2);
+		for (int j = 0; j < vocab.rows; j++) {
 			double temp = norm(descriptors.row(i), vocab.row(j), NORM_L2);
-			if (temp < min)
-			{
+			if (temp < min) {
 				min = temp;
 				index = j;
 			}
 		}
-		histo.at<int>(0, index) = histo.at<int>(0, index) + 1;
+		x++;
+
+		histo.at<float>(0, index) = histo.at<float>(0, index) + 1;
 	}
 
 	return histo;
