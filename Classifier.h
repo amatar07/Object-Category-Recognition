@@ -21,7 +21,8 @@ using namespace cv;
 
 #define IMG_TYPE								"png"
 
-class MyClassifier {
+class MyClassifier
+{
 private:
 
 	String srcPath, siftPath, bowPath;

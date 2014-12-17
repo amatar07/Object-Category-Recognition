@@ -29,11 +29,10 @@ void MyClassifier::calculateSIFT() {
 		util.createFile(siftPath, s, "sift", sifts[i]);
 	}
 
-	cout << "SIFT Created" << endl;
+	cout << "SIFTs Created" << endl;
 }
 
 void MyClassifier::calculateBOW(Mat vocab) {
-
 	bows = bow.bagOfWords(sifts, vocab);
 
 	for (size_t i = 0; i < bows.size(); i++) {
@@ -43,7 +42,7 @@ void MyClassifier::calculateBOW(Mat vocab) {
 		util.createFile(bowPath, s, "bow", bows[i]);
 	}
 
-	cout << "BOW Created" << endl;
+	cout << "BOWs Created" << endl;
 }
 
 void MyClassifier::train(Mat trainingData, Mat trainingLabels) {

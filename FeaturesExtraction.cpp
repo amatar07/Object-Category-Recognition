@@ -16,7 +16,8 @@
  *
  * @return Descriptors
  */
-Mat Extractor::getDescriptors(Mat img, int xyStep) {
+Mat Extractor::getDescriptors(Mat img, int xyStep)
+{
 	Mat descriptors_mat;
 	vector<KeyPoint> keypoints;
 	SiftDescriptorExtractor sift_extractor;
@@ -40,10 +41,12 @@ Mat Extractor::getDescriptors(Mat img, int xyStep) {
  *
  * @return Vector Descriptors
  */
-vector<Mat> Extractor::getDescriptors(vector<Mat> images, int xyStep) {
+vector<Mat> Extractor::getDescriptors(vector<Mat> images, int xyStep)
+{
 	vector<Mat> sifts;
 
-	for (size_t i = 0; i < images.size(); i++) {
+	for (size_t i = 0; i < images.size(); i++)
+	{
 		sifts.push_back(getDescriptors(images[i], xyStep));
 	}
 
@@ -61,7 +64,8 @@ vector<Mat> Extractor::getDescriptors(vector<Mat> images, int xyStep) {
  *
  * @return Resized equalized Image
  */
-Mat Extractor::initImg(Mat img, int width, int height) {
+Mat Extractor::initImg(Mat img, int width, int height)
+{
 	resize(img, img, Size(width, height));
 	cvtColor(img, img, CV_BGR2GRAY);
 	equalizeHist(img, img);

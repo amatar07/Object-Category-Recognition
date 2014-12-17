@@ -17,22 +17,25 @@
 #include "dirent.h"
 #include "opencv2/opencv.hpp"
 #include "opencv2/highgui/highgui.hpp"
-#include "BOW.h"
 
 using namespace std;
 using namespace cv;
 
 #define FILEWRITETYPE 					"png"
 
-class Utils {
+class Utils
+{
 public:
-
 	Mat readSingleImage(string path);
-	vector<Mat> readFolderImages(string path, string imageType = FILEWRITETYPE);
-	void createFile(string path, string fileName, string fileType, Mat image);
+	Mat append_images(Mat image1, Mat image2);
+	Mat append_images(vector<Mat> images);
+
 	vector<Mat> getRandomImages(vector<Mat> images, int nums);
-	Mat getTrainData(vector<Mat> allData);
-	Mat getTestData(vector<Mat> allData);
+	vector<Mat> readFolderImages(string path, string imageType = FILEWRITETYPE);
+
+	void createFile(string path, string fileName, string fileType, Mat image);
+	void splitByPerecent(vector<Mat> images, vector<Mat>& a, vector<Mat>& b, float percent);
+	void maskLabel(Mat& mask, int start, int range, int label);
 };
 
 #endif

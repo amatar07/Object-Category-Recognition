@@ -23,7 +23,8 @@ using namespace cv;
 #define IMG_WIDTH							300
 #define IMG_HEIGHT							250
 
-class Extractor {
+class Extractor
+{
 private:
 	Mat initImg(Mat img, int width = IMG_WIDTH, int height = IMG_HEIGHT);
 public:
